@@ -1,0 +1,37 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Home
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+
+{% block body %}
+     <section class="headline">
+       <h1 style="color: white;">Whatsapp As A Service</h1>
+       <p style="color: white;">Professional WhatsApp Automation and Group Analysis Logs</p>
+     </section>
+     <section class="features">
+       <div class="feature-container">
+         <img src="{% static 'images/automation.jpg' %}" alt="Flexbox Feature">
+         <h2>WhatsApp Automation Solutions</h2>
+         <p>Streamline your communication processes with our advanced automation tools, ensuring efficient message handling, member tracking, and group management.</p>
+       </div>
+       <div class="feature-container">
+         <img src="{% static 'images/group-analysis.jpg' %}" alt="Flexbox Feature">
+         <h2>Comprehensive Group Analysis</h2>
+         <p>Dive deep into your WhatsApp group dynamics with our statistical analysis tools. Gain valuable insights into member behavior, message trends, and overall group activity.</p>
+       </div>
+       <div class="feature-container">
+         <img src="{% static 'images/secure-message.jpg' %}" alt="Flexbox Feature">
+         <h2>Secure Message Archiving</h2>
+         <p>Safely store and manage received messages in a robust database. Enjoy the convenience of message retrieval and data download, ensuring a reliable record of your conversations.</p>
+       </div>
+     </section>
+{% endblock %}

@@ -1,0 +1,474 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    {{ bot.name }}
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/bot.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}">
+{% endblock %}
+
+
+{% block js %}
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {% comment %} <script src="{% static 'js/bot.js' %}"></script> {% endcomment %}
+    <script src="{% static 'js/loading.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+<div class="loading" id="loading">Loading&#8230;</div>
+<div class="data">
+        <div class="name">
+            <h1>{{ bot.name }}</h1>
+            <div class = "editname" onclick="update_bot_name('{{bot.id}}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                </svg>
+            </div>
+            <div class="deletebot">
+                <form action="/delete_bot/" method="POST" onsubmit="return delete_bot('{{bot.id}}')">
+                    {% csrf_token %}
+                    <input type="hidden" name="bot-id" value="{{ bot.id }}">
+                    <input type="hidden" name="ask-user" value="true" id="ask-user-deletion-{{bot.id}}">
+                    <input type="submit" value="Delete" id="Delete-bot-{{bot.id}}" hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" onclick="$(`#Delete-bot-{{bot.id}}`).click()">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    </svg>
+                </form>
+            </div>
+        </div>
+        <div class="update_bot_name_{{bot.id}}" style="display:none;">
+            <form action="/update_bot_name/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="bot_id" value="{{ bot.id }}">
+                <input type="text" name="bot_name" value="{{ bot.name }}" required>
+                <input type="submit" value="Update">
+            </form>
+        </div>
+        <div class="info">
+            <p>Mobile: {{ bot.mobile }}</p>
+            <p>Status: <span id="bot-status-{{ bot.id }}">Loading...</span></p>
+        </div>
+        <div>
+            {% if bot.type == 'semi-active'%}
+            <button class="matter-button-contained" onclick="toggle('{{bot.id}}')" id = "bot-toggle-{{bot.id}}">Start</button>
+            {%endif%}
+            <button class="matter-button-contained group-grabber" onclick="GroupGrabber()">Groups</button>
+        </div>
+        <div id="qr-code-container"></div>
+        <button class="downloadbutton matter-button-contained" onclick="downloaddata('json', '{{bot.id}}')">Download json</button>
+        <button class="downloadbutton matter-button-contained" onclick="downloaddata('csv', '{{bot.id}}')">Download csv</button>
+        <div class="groupsinfo">
+        {% comment %} <hr>
+        <table class="groupsinfotable"></table> {% endcomment %}
+        </div>
+        <div class="active">
+
+            <form action="/update_bot_type/" method="POST">
+                {%csrf_token%}
+                <input type="hidden" name="bot_id" value="{{ bot.id }}">
+                {%if bot.type == 'active'%}
+                    <input type="radio" name="type" value="active" checked> Active
+                    <input type="radio" name="type" value="semi-active"> Semi-Active
+                {%else%}
+                    <input type="radio" name="type" value="active"> Active
+                    <input type="radio" name="type" value="semi-active" checked> Semi-Active
+                {%endif%}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <hr>
+    
+        
+</div>
+
+
+
+<script>
+    console.log(`{{bot.id}}`);
+    async function getgrouptags(){
+        let tagdata = await fetch(`/api/getgrouptags/?botid={{bot.id}}`)
+        let tagjson = await tagdata.json();
+        console.log(tagjson);
+        if(tagjson == null){
+            console.error('Error fetching tagdata');
+            return {};
+        }
+        if(tagjson['status'] == 'NOT CONNECTED'){
+            toastr["error"]("Bot not connected", "Error");
+        }
+        return tagjson;
+    }
+    const json2csv = function (data, fields) {
+        let csv = '';
+        for (let i = 0; i < fields.length; i++) {
+            csv += fields[i];
+            if (i != fields.length - 1) {
+                csv += ',';
+            }
+        }
+        csv += '\n';
+        for (row of data) {
+            for (let i = 0; i < fields.length; i++) {
+                csv += row[fields[i]];
+                if (i != fields.length - 1) {
+                    csv += ',';
+                }
+            }
+            csv += '\n';
+        }
+        return csv.replaceAll('@g.us', '').replaceAll('@c.us', '');
+    }
+    var socket = io("{{ HOST_URL }}");
+    socket.on("connect", () => {
+        console.log("Connected to server");
+    });
+    socket.on("receive", (data) => {
+        console.log("Received message:", data);
+        let status = data.status;
+        let botId = data.id;
+        let qrData = data.qr;
+        if (status == "CONNECTED") {
+            $(`#bot-status-${botId}`).text("CONNECTED");
+            let botToggleButton = $(`#bot-toggle-${botId}`);
+            if (botToggleButton) {
+                botToggleButton.text("Stop");
+            }
+            // $(`#bot-qr-${botId}`).style.display = "none";
+            document.getElementById("qr-code-container").innerHTML = "";
+        } else if (status == "SCAN QR") {
+            fetch('/api/encode_qr_code?qrdata=' + encodeURIComponent(qrData))
+            .then(response => response.json())
+            .then(data => {
+                let qrCode = data.img;
+                console.log("QR Received");
+                $(`#bot-status-${botId}`).text("SCAN QR");
+                // $(`#bot-qr-${botId}`).attr("src", qrCode);
+                // $(`#bot-qr-${botId}`).style.display = "block";
+                document.getElementById("qr-code-container").innerHTML = `<img style="width:200px;" src="${qrCode}" alt="QR Code">`;
+            });   
+        } else if (status == "LOGGED OUT") {
+            $(`#bot-status-${botId}`).text("NOT CONNECTED");
+            $(`#bot-qr-${botId}`).hide();
+            let botToggleButton = $(`#bot-toggle-${botId}`);
+            if (botToggleButton) {
+                botToggleButton.text("Start");
+            }
+        }
+        else if (status == "MOBILE NUMBER"){
+            fetch(`/api/checkmobilenumber/${botId}/${data.mobile}`)
+            .then(response => response.json())
+            .then(jsondata => {
+                if (jsondata.newNumber){
+                    //command(botId, "login");
+                }
+                else{
+                    alert(`This number is already registered with username ${jsondata.UserName}. Please delete that bot first to register this number.`);
+                    document.querySelector(`#ask-user-deletion-${botId}`).setAttribute("value", "false");
+                    document.querySelector(`#Delete-bot-${botId}`).click();
+                }
+            });
+        }
+    });
+    var command = function (botId, cmd) {
+        let data = {
+            "id": botId,
+            "operation": cmd
+        };
+        socket.emit("send", data);
+    }
+    var update_bot_name = function (id) {
+        document.querySelector(`.name`).style.display = "none";
+        document.querySelector(`.update_bot_name_${id}`).style.display = "block";
+
+    }
+
+    var toggle = function (botId) {
+        fetch('/api/status/')
+        .then(response => response.json())
+        .then(data => {
+            let status = data.status;
+            if (status[botId] == "CONNECTED") {
+                command(botId, "logout");
+                console.log("Logging out", botId);
+                let botStatusElement = $(`#bot-status-${botId}`)
+                if (botStatusElement) {
+                    botStatusElement.text("LOGGING OUT...");
+                }
+                let botToggleButton = $(`#bot-toggle-${botId}`);
+                if (botToggleButton) {
+                        botToggleButton.text("Stoping...");
+                }
+
+            } else if (status[botId] == "NOT CONNECTED") {
+                command(botId, "login");
+                let botStatusElement = $(`#bot-status-${botId}`)
+                if (botStatusElement) {
+                    botStatusElement.text("LOGGING IN...");
+                }
+                let botToggleButton = $(`#bot-toggle-${botId}`);
+                if (botToggleButton) {
+                        botToggleButton.text("Starting...");
+                }
+                console.log("Logging in", botId);
+            }
+        });
+    }
+    var delete_bot = function (botId) {
+        let ask_user = document.querySelector(`#ask-user-deletion-${botId}`).getAttribute("value");
+        if(ask_user == "false"){
+            command(botId, "logout");
+            return true;
+        }
+        let val = confirm('Are you sure you want to delete this bot permanently?');
+        if(val){
+            command(botId, "logout");
+        }
+        return val;
+
+    }
+    $(document).ready(function(){
+        
+        function updateAllBotStatus() {
+            fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                let status = data.status;
+                console.log(status);
+                for ([botId, botStatus] of Object.entries(status)) {
+                    let botStatusElement = $(`#bot-status-${botId}`);
+                    console.log(botStatusElement);
+                    if (botStatusElement && botStatus) {
+                        botStatusElement.text(botStatus);
+                        console.log("Updated bot status");
+                    }
+                    let botToggleButton = $(`#bot-toggle-${botId}`);
+                    if (botToggleButton) {
+                        if (botStatus == "CONNECTED") {
+                            botToggleButton.text("Stop");
+                        } else if (botStatus == "NOT CONNECTED") {
+                            botToggleButton.text("Start");
+                        }
+                    }
+                }
+            });
+        }
+        updateAllBotStatus();
+        setInterval(updateAllBotStatus, 60000);
+    });
+
+    var GroupGrabber = async function(){
+        document.getElementById('loading').style.visibility = 'visible';
+        let tagjson = await getgrouptags();
+        if(tagjson['status'] == 'NOTCONNECTED'){
+            toastr["error"]("Bot not connected", "Error");
+            return;
+        }
+        tagdata = tagjson['tags'];
+        fetch(`{{ HOST_URL }}/groups/{{bot.id}}`)
+        .then(response => response.json())
+        .then(data =>  {
+            document.getElementById('loading').style.visibility = 'hidden';
+            if(data == null){
+                console.error('Error fetching data');
+                return;
+            }
+            if(data['status'] == 'NOT CONNECTED'){
+                toastr["error"]("Bot not connected", "Error");
+                return;
+            }
+            if(data['status'].length == 0){
+                toastr["error"]("No groups present", "Error");
+                return;
+            }
+            //tagdata = {};
+            if(tagdata == null){
+                console.error('Error fetching tagdata');
+                return;
+            }
+            document.createElement('p').innerHTML = data['groups'];
+            let tablediv = document.querySelector('.groupsinfo');
+            tablediv.innerHTML = `
+            <hr>
+            <h3>Groups</h3>
+            <div class="filtergroups">
+                <form action="/addtag/" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="chatid" placeholder="Group-id" required>
+                    <input type="text" name="botid" placeholder="Bot-id" required>
+                    <input type="text" name="tag" required>
+                    <input type="submit" value = "Add Tag">
+                </form>
+                <div class="options">
+                    <form id="searchform">
+                        <input type="text" name="word" placeholder="Search Word">
+                        {% comment %} <input list="options" name="type" placeholder="type">
+                        <datalist id="options">
+                            <option value="Group Name">
+                            <option value="Owner">
+                            <option value="Tags">
+                        </datalist> {% endcomment %}
+                        <select name="type">
+                            <option value="Group Name">Group Name</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Tags">Tags</option>
+                        </select>
+                        <input type="Submit">
+                    </form>
+                </div>
+            </div>
+            <table class="groupsinfotable">
+                <thead>
+                    <tr>
+                        <th>S. number</th>
+                        <th>Group Name</th>
+                        <th>Owner</th>
+                        <th>Group Size</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody class="groupsinfotablebody">
+                    
+                </tbody>
+
+            </table>
+            `;
+            let tablebody = tablediv.querySelector('.groupsinfotablebody');
+            for(let i = 0; i<data['groups'].length; i++){
+                let row = document.createElement('tr');
+                let sno = document.createElement('td');
+                sno.innerHTML = i+1;
+                let name = document.createElement('td');
+                name.innerHTML = `
+                    <a href="/group/${data['groups'][i]['id']}/?botid={{bot.id}}">${data['groups'][i]['name']}</a>
+                `;
+                let owner = document.createElement('td');
+                owner.innerHTML = data['groups'][i]['owner'].replace('@c.us', '');
+                let participants = document.createElement('td');
+                participants.innerHTML = data['groups'][i]['participants_size'];
+                let grouptags = document.createElement('td');
+                row.appendChild(sno);
+                row.appendChild(name);
+                row.appendChild(owner);
+                row.appendChild(participants);
+                if(!(data['groups'][i]['id'] in tagdata)){
+                    tagdata[data['groups'][i]['id']] = new Array();
+                }
+                let tags = tagdata[data['groups'][i]['id']];
+
+                let tagstring = '';
+                for(let i = 0; i<tags.length; i++){
+                    tagstring += tags[i];
+                    if(i != tags.length-1){
+                        tagstring += ', ';
+                    }
+                }
+                grouptags.innerHTML = tagstring;
+                row.appendChild(grouptags);
+                row.setAttribute('class', data['groups'][i]['id']);
+                tablebody.appendChild(row);
+            }
+        });
+    }
+
+
+    var downloaddata = function downloadBase64File(content, id) {
+        fetch(`{{ HOST_URL }}/groups/${id}`)
+        .then(response => response.json())
+        .then(jsondata => {
+            let fileName = '';
+            let base64Data = '';
+            let contentType = '';
+            if(content == 'json'){
+                fileName = 'data.json';
+                contentType = 'application/json';
+                base64Data = encodeURIComponent(JSON.stringify(jsondata['groups']));
+            }
+            else if(content == 'csv'){
+                fileName = 'data.csv';
+                contentType = 'text/csv';
+                // base64Data = encodeURIComponent(parse(JSON.stringify(jsondata['groups'])));
+                let fields = ['id', 'name', 'owner', 'participants_size', 'participants'];
+                jsondata['groups'].forEach((group) => {
+                    group['participants'] = group['participants'].replaceAll(',', ';');
+                });
+                base64Data = encodeURIComponent(json2csv(jsondata['groups'], fields));
+            }
+            const linkSource = `data:${contentType},${base64Data}`;
+            console.log(linkSource);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
+        });
+    }
+    $('.groupsinfo').on('submit', '#searchform', (e) => {
+        e.preventDefault();
+        let word = $('#searchform input[name="word"]').val();
+        let type = $('#searchform select[name="type"]').val();
+        document.querySelectorAll('.groupsinfotablebody>tr').forEach((row) => {
+            row.style.display = 'none';
+        });
+        if(type == 'Group Name'){
+            document.querySelectorAll('.groupsinfotablebody>tr').forEach((row) => {
+                if(row.children[1].innerHTML.includes(word)){
+                    row.style.display = 'table-row';
+                }
+            });       
+            return;     
+        }
+        else if(type == 'Owner'){
+            document.querySelectorAll('.groupsinfotablebody>tr').forEach((row) => {
+                if(row.children[2].innerHTML == word){
+                    row.style.display = 'table-row';
+                }
+            });  
+            return;          
+        }
+        else if(type == 'Tags'){
+            fetch('/api/getgrouptags/?botid={{bot.id}}')
+            .then(response => response.json())
+            .then(data => {
+                if(data == null){
+                    console.error('Error fetching data');
+                    return;
+                }
+                if(data['status'] == 'NOT CONNECTED'){
+                    toastr["error"]("Bot not connected", "Error");
+                    return;
+                }
+                let num = 0;
+                let getGroupsbyTags = {}
+                Object.keys(data['tags']).forEach(function(groupid) {
+                    let grouptags = data['tags'][groupid]
+                    grouptags.forEach((tag) => {
+                        if(!getGroupsbyTags[tag]){
+                            getGroupsbyTags[tag] = new Array();
+                        }
+                        getGroupsbyTags[tag].push(groupid);
+                    });
+                }); 
+                for(let i = 0; i<getGroupsbyTags[word].length; i++){
+                    let row = document.getElementsByClassName(`${getGroupsbyTags[word][i]}`)[0];
+                    row.style.display = 'table-row';
+                }
+            });
+        }
+        else{
+            console.error('Invalid type');
+            return;
+        }
+    });
+
+
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | WAAS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <link href="https://res.cloudinary.com/finnhvman/raw/upload/matter/matter-0.2.2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/shadow.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tooltip.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matter.css' %}" />
+    {% block css %}{% endblock %}
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block js %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+</head>
+<body>
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+      
+      <!-- Navbar -->
+      <div class="nav-wrapper">
+       <div class="grad-bar"></div>
+       <nav class="navbar">
+         <img src="{% static 'images/logo-white.png' %}" alt="WAAS Logo">
+         <div class="menu-toggle" id="mobile-menu">
+           <span class="bar"></span>
+           <span class="bar"></span>
+           <span class="bar"></span>
+         </div>
+         <ul class="nav no-search">
+           <li class="nav-item"><a href="/">Home</a></li>
+           <li class="nav-item"><a href="#">Demo</a></li>
+           <li class="nav-item"><a href="#">Pricing</a></li>
+           <li class="nav-item"><a href="#">Contact Us</a></li>
+           {% if user.is_authenticated %}
+            <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="nav-item"><a href="/logout">Logout</a></li>
+            {% else %}
+            <li class="nav-item"><a href="/login">Login</a></li>
+            <li class="nav-item"><a href="/signup">Sign Up</a></li>
+            {% comment %} <li class="nav-item">
+                {% load socialaccount %}
+                <a href="{% provider_login_url 'google' %}?next=/dashboard">Login with Google</a>
+            </li> {% endcomment %}
+          {% endif %}
+         </ul>
+       </nav>
+      </div>
+      <!-- End Navbar -->
+
+      <!-- Main Content -->
+      <div id="main-content">
+        {% block body %}{% endblock %}
+      </div>
+      <!-- End Main Content -->
+
+    </div>
+    <!-- End Page Wrapper -->
+
+    <!-- Site footer -->
+    <footer class="site-footer">
+        {% comment %} <div class="container">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h6>About</h6>
+              <p class="text-justify">Our innovative platform is designed to empower businesses and individuals by providing comprehensive tools for group administration and dynamic conversation analysis. Elevate your messaging experience, streamline operations, and gain valuable insights with our state-of-the-art solution. Join us in shaping the future of efficient communication. Sign up today and revolutionize your WhatsApp interactions!</p>
+            </div>
+  
+            <div class="col-xs-6 col-md-3">
+              <h6>Explore</h6>
+              <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Get Started</a></li>
+                <li><a href="#">Demo</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">FAQs</a></li>
+              </ul>
+            </div>
+  
+            <div class="col-xs-6 col-md-3">
+              <h6>Quick Links</h6>
+              <ul class="footer-links">
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Refund Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Sitemap</a></li>
+              </ul>
+            </div>
+          </div>
+          <hr>
+        </div> {% endcomment %}
+        <div class="container">
+          <div class="row">
+            {% comment %} <div class="col-md-8 col-sm-6 col-xs-12"> {% endcomment %}
+              <p class="copyright-text" style="text-align: center; width: 100%;">Copyright &copy; 2024 All Rights Reserved by 
+                <a href="/">WAAS</a>.
+              </p>
+            {% comment %} </div> {% endcomment %}
+  
+            {% comment %} <div class="col-md-4 col-sm-6 col-xs-12">
+              <ul class="social-icons">
+                <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+                <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>   
+              </ul>
+            </div> {% endcomment %}
+          </div>
+        </div>
+  </footer>
+  {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            {% comment %} <li class="error">{{ message }}</li> {% endcomment %}
+            <script>toastr["error"]("{{ message }}", "Error");</script>
+        {% endif %}
+        {% if message.tags == 'success' %}
+            {% comment %} <li class="success">{{ message }}</li> {% endcomment %}
+            <script>toastr["success"]("{{ message }}", "Success");</script>
+        {% endif %}
+    {% endfor %}
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    mytemplate
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/mytemplate.css' %}">
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static 'js/mytemplate.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+     This is a template starter code
+{% endblock %}

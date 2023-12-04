@@ -1,0 +1,65 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Sign Up
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+
+
+{% block body %}
+
+
+    <div class="card-login shadow-card-2">
+        <h1>Sign Up</h1>
+        <form action="/signup/" method="POST">
+            {% csrf_token %}
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="username" placeholder=" " required>
+                    <span>Username</span>
+                </label>
+            </div>
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="email" placeholder=" " type="email">
+                    <span>Email</span>
+                </label>
+            </div>
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="password1" type="password" placeholder=" " required>
+                    <span>Password</span>
+                </label>
+            </div>
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="password2" type="password" placeholder=" " required>
+                    <span>Confirm Password</span>
+                </label>
+            </div>
+            <div>
+                <input class="matter-button-contained" type="submit" value="Sign Up">
+            </div>
+        </form>
+
+        <h2>Or Continue with </h2>
+        {% load socialaccount %}
+        <a href="{% provider_login_url 'google' %}?next=/dashboard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
+        </a>
+        
+
+        <p class="already-have-an-account">
+            Already have an account? 
+            <a class="matter-link" href="/login">Sign In</a>
+        </p>
+    </div>
+    
+{% endblock %}

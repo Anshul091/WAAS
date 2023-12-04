@@ -1,0 +1,55 @@
+.bot-container {
+    color: black;
+    display: flex;
+    flex-wrap: wrap;  
+    padding: 1rem;
+}
+
+.bot {
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 1rem;
+}
+
+.bot-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: top;
+}
+
+.bot-img {
+    width: 120px;
+    height: 120px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.trash-bin {
+    width: 30px;
+    height: 30px;
+    margin-left: 0px;
+    margin-top: 8px;
+    z-index: -1;
+    cursor: pointer;
+}
+
+.bot-info p a {
+    font-family: monospace;
+    font-size: 1.2rem;
+}
+
+.plus-svg {
+    scale: 0.6;
+    margin: 0 50px;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.add-new-bot-form {
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}

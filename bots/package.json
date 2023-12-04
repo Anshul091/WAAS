@@ -1,0 +1,29 @@
+{
+  "name": "bots",
+  "version": "1.0.0",
+  "description": "Whatsapp bot supporting multiple clients",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Parth-Jain-2002/WAAS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Parth-Jain-2002/WAAS/issues"
+  },
+  "homepage": "https://github.com/Parth-Jain-2002/WAAS#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "qrcode-terminal": "^0.12.0",
+    "request": "^2.88.2",
+    "socket.io": "^4.7.2",
+    "sqlite3": "^5.1.7-rc.0",
+    "whatsapp-web.js": "^1.23.0"
+  }
+}

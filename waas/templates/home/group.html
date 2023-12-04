@@ -1,0 +1,206 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{%load parse_mobile %}
+
+
+{% block title %}
+    {{group.name}}
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/group.css' %}">
+{% endblock %}
+
+{% block js%}
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    {% comment %} <script src="{% static 'js/group.js' %}"></script> {% endcomment %}
+    
+{%endblock%}
+
+
+{% comment %}  
+group,         # grouplog of latest timestamp (GroupLog)
+group_msg,     # All messages of the group (BotMessage)
+grouplogs      # List of members sorted in decreasing order by timestamp (GroupLog) 
+{% endcomment %}
+{% block body%}
+    <h1>{{group.name}}</h1>
+    <h2>
+        {{group.owner | parse_mobile}}
+    </h2>
+    <h2>Members in the group - {{group.participants_size}}</h2>
+
+    <div class="groupparticipant">
+        <h3> Group Participants </h3>
+        <table class="altertable">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>First seen in group</th>
+                    <th>Last seen in group</th>
+                </tr>
+            </thead>
+            {% for participant, timestamps in groupparticipant.items%}
+            <tr>
+                <td>{{participant}}</td>
+                {%for date in timestamps%}
+                <td>{{date}}</td>
+                {%endfor%}
+            </tr>
+            {%empty%}
+            <tr>
+                <td colspan="4">No members left or Joined</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <hr>
+    <div class="memberactivity">
+        <h3> Member Activity </h3>
+        <div class="memberactivitybuttons">
+            <button onclick="Graph_visible()" class="matter-button-contained"> Graph </button>
+            <button onclick="Table_visible()" class="matter-button-contained"> Table </button>
+        </div>
+        <table class="memberactivitytable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Member Added</th>
+                    <th>Member Left</th>
+                    <th>Total Change</th>
+                </tr>
+            </thead>
+            {% for date, activity in memberactivity.items%}
+            <tr>
+                <td>{{date}}</td>
+                {%for act in activity%}
+                <td>{{act}}</td>
+                {%endfor%}
+            </tr>
+            {%empty%}
+            <tr>
+                <td colspan="4">No members present till now.</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <canvas class="memberactivitygraph" id="memberChart" style="width:100%;max-width:700px; display:none;"></canvas>
+    </div>
+
+    <hr>
+    
+    <div class="groupmessages">
+        <h3> Group Messages </h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Message</th>
+                    <th>Date, Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for msg in group_msg %}
+                <tr>
+                    <td>{{msg.message}}</td>
+                    <td>{{msg.timestamp}}</td>
+                </tr>
+                {%empty%}
+                <tr>
+                    <td colspan="4">No messages present till now.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+    <script>
+        const xValues = [];
+        const yValues = [];
+        {% for group in grouplogs %}
+            xValues.push("{{group.timestamp}}");
+            yValues.push("{{group.participants_size}}");
+        {% endfor %}
+        xValues.reverse();
+        yValues.reverse();
+        
+        xValues.forEach((xValue, index) => {
+            arr = xValue.split(",");
+            xValues[index] = arr[0] + ',' + arr[1];
+        });
+
+    new Chart("memberChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor:"#83C0C1",
+          borderColor: "#83C0C1",
+          data: yValues,
+          fill: false,
+          lineTension: 0
+        }]
+      },
+      options:{
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Date'
+            },
+          }], 
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                display: true,
+                labelString: 'Members'
+                },
+                ticks: {
+                    beginAtZero: true,
+                    precision: 0,
+                }
+            
+            }]
+        }
+
+      }
+    });
+
+    var Graph_visible = function(){
+        document.querySelector('.memberactivitygraph').style.display = "block";
+        document.querySelector('.memberactivitytable').style.display = "none";
+    }
+    var Table_visible = function(){
+        document.querySelector('.memberactivitygraph').style.display = "none";
+        document.querySelector('.memberactivitytable').style.display = "table";
+    }
+
+
+    $(document).ready(() => {
+        messagediv = document.querySelector('.groupmessages')
+        tbody = messagediv.querySelector('tbody')
+        messages = []
+        {% for msg in group_msg%}
+            messages.push("{{msg.message}}")
+            if(messages[-1].length > 50){
+                messages[-1] = messages[-1].splice(0, 50) + '...';
+            }
+        {% endfor %}
+        tbody.innerHTML = `
+        {% for msg in group_msg %}
+            <tr>
+                <td>${messages[{{forloop.counter0}}]}</td>
+                <td>{{msg.timestamp}}</td>
+            </tr>
+            {%empty%}
+            <tr>
+                <td colspan="4">No messages present till now.</td>
+            </tr>
+        {% endfor %}`
+    });
+</script>
+
+{% endblock %}xAxes

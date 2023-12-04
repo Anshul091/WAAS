@@ -1,0 +1,56 @@
+h1, h2{
+    text-align: left;
+}
+
+h3{
+    text-align: center;
+}
+
+.groupparticipant{
+    padding: 15px;
+}
+
+
+
+table{
+    width: 100%;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid black;
+}
+
+tr, td{
+    padding: 5px;
+    border-bottom: 1px solid black;
+}
+
+th{
+    padding: 5px;
+    border-bottom: 1px solid black;
+    text-align: left;
+    margin-top: 1.5 rem;
+    background-color: #83C0C1;
+}
+
+hr{
+    border: 3px solid black;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.memberactivitybuttons{
+    padding: 1rem;
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.memberactivitygraph{
+    margin: 0 auto;
+}
+
+
+.groupparticipant, .memberactivity, .groupmessages{
+    max-height: 50vh;
+    overflow-y: scroll;
+}

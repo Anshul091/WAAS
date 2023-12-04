@@ -1,0 +1,12 @@
+bots/node_modules
+bots/.wwebjs_auth
+bots/.wwebjs_cache
+.wwebjs_auth
+.wwebjs_cache
+users.json
+waas/db.sqlite3
+**/.DS_Store
+**/__pycache__/
+v1/
+.env
+git*

@@ -1,0 +1,53 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Login
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+
+
+{% block body %}
+
+
+    <div class="card-login shadow-card-2">
+        <h1>Login</h1>
+        <form action="/login/" method="POST">
+            {% csrf_token %}
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="username" placeholder=" " required>
+                    <span>Username</span>
+                </label>
+            </div>
+            <div>
+                <label class="pure-material-textfield-outlined">
+                    <input name="password" type="password" placeholder=" " required>
+                    <span>Password</span>
+                </label>
+            </div>
+            <div>
+                <input class="matter-button-contained" type="submit" value="Login">
+            </div>
+        </form>
+
+        <h2>Or Continue with </h2>
+        {% load socialaccount %}
+        <a href="{% provider_login_url 'google' %}?next=/dashboard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
+        </a>
+        
+
+        <p class="already-have-an-account">
+            Don't have an account? 
+            <a class="matter-link" href="/signup">Sign Up</a>
+        </p>
+    </div>
+    
+{% endblock %}
