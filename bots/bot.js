@@ -38,3 +38,16 @@ console.log("DJANGO_URL: " + DJANGO_URL);
 console.log("PORT: " + PORT);
 
 // helper function to save the new message to the database
+
+async function getLatestMessagesAfterTimestamp(client, chatid, time) {
+    console.log('chatid - ' + chatid);
+    console.log(time);
+    let chat = await client.getChatById(chatid);
+    let limit = 10;
+    let cur_timestamp = Math.floor(Date.now()/1000);
+    let messages = [];
+    console.log(cur_timestamp, time, cur_timestamp > time);
+    while(cur_timestamp > time){
+        messages = await chat.fetchMessages({ limit: limit , fromMe: false});
+        // The chat doesn't have enough messages.
+        if(messages.length <= limit){
