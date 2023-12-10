@@ -51,3 +51,17 @@ async function getLatestMessagesAfterTimestamp(client, chatid, time) {
         messages = await chat.fetchMessages({ limit: limit , fromMe: false});
         // The chat doesn't have enough messages.
         if(messages.length <= limit){
+            break;
+        }
+        limit *= 2;
+        cur_timestamp = messages[0].timestamp;
+    }
+    let ind = 0;
+    for (let message of messages){
+        if (message.timestamp <= time){
+            ind++;
+        }
+        else break;
+    }
+    console.log(ind, messages.length);
+    for(let message of messages){
