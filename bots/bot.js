@@ -92,3 +92,17 @@ function unix2DateTime(unixTimestamp) {
 
     // Construct the datetimeField string in the format expected
     let datetimeField = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return datetimeField;
+}
+
+function saveNewMessage(data) {
+    db.serialize(() => {
+        db.run(`INSERT INTO home_botmessage (botid, chatid, message, isgroup, seen_cnt, read_cnt, timestamp) VALUES(?,?,?,?,?,?,?)`, [data.botid, data.chatid, data.message, data.isgroup, data.seen_cnt, data.read_cnt, data.timestamp], function (err) {
+            if (err) {
+                return console.log(err.message);
+            }
+            // get the last insert id
+            console.log(`A row has been inserted with rowid ${this.lastID}`);
+        });
+    });
+}
