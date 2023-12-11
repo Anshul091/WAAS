@@ -65,3 +65,17 @@ async function getLatestMessagesAfterTimestamp(client, chatid, time) {
     }
     console.log(ind, messages.length);
     for(let message of messages){
+        console.log(message.body);
+    }
+    const messagesAfterTime = messages.slice(ind);
+    console.log('message - ' +  messagesAfterTime.length);
+    for(let message of messagesAfterTime){
+        console.log(message.body);
+    }
+    return messagesAfterTime;
+}
+
+
+// Convert unix to DateTimeField
+
+function unix2DateTime(unixTimestamp) {
