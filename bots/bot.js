@@ -106,3 +106,16 @@ function saveNewMessage(data) {
         });
     });
 }
+function saveNewMessageLog(data) {
+    let table = "home_botmessage";
+    let sql = `INSERT INTO ${table} (botid, chatid, message, isgroup, seen_cnt, read_cnt, timestamp) VALUES `;
+    let querstionParameters = `(?, ?, ?, ?, ?, ?, ?)`;
+    for (let i = 0; i < data.length; i++) {
+        sql += querstionParameters;
+        if (i < data.length - 1) {
+            sql += ', ';
+        }
+    }
+    parameters = [];
+    for (let message of data) {
+        parameters.push(message.botid, message.chatid, message.message, message.isgroup, message.read_cnt, message.seen_cnt, message.timestamp);
