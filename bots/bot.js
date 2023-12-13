@@ -119,3 +119,17 @@ function saveNewMessageLog(data) {
     parameters = [];
     for (let message of data) {
         parameters.push(message.botid, message.chatid, message.message, message.isgroup, message.read_cnt, message.seen_cnt, message.timestamp);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.run(sql, parameters, function(err) {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(`New log inserted for chatid: ${data.chatid}`);
+            }
+        });
+    });
+}
+
+function isGroup(message) {
