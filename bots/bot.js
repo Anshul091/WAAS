@@ -147,3 +147,16 @@ async function fetchAllGroups(client) {
                 des = group.description;
             }
             let participants_mobile = [];
+            for (const participant of group.participants) {
+                participants_mobile.push(participant.id.user);
+            }
+            let participants_mobile_str = participants_mobile.join(",");
+            res.push({
+                "id": group.id._serialized,
+                "name": group.name,
+                "description": des,
+                "owner": group.owner ? group.owner._serialized : "No owner found",    // TODO: handle "No owner found
+                "participants_size": group.participants.length,
+                "participants": participants_mobile_str,
+            });
+            // console.log(res[res.length - 1]);
