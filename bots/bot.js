@@ -133,3 +133,17 @@ function saveNewMessageLog(data) {
 }
 
 function isGroup(message) {
+    return (typeof (message.author) != "undefined");
+}
+
+async function fetchAllGroups(client) {
+    const chats = await client.getChats();    // Bug in this: If user logs out immediately after login, this line will cause error
+    const groups = chats.filter(chat => chat.isGroup);
+    let res = [];
+    for (const group of groups) {
+        try {
+            let des = "";
+            if (group.description) {
+                des = group.description;
+            }
+            let participants_mobile = [];
