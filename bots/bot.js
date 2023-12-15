@@ -188,3 +188,16 @@ async function getMobileFromDatabase(id) {
 }
 
 async function updateMobileInDatabase(id, mobile) {
+    let table = "home_bot";
+    let sql = `UPDATE ${table} SET mobile = '${mobile}' WHERE id = '${id}'`;
+
+    return new Promise((resolve, reject) => {
+        db.run(sql, function(err) {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(`Mobile number updated for ID: ${id}`);
+            }
+        });
+    });
+}
