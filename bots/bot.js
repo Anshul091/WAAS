@@ -160,3 +160,17 @@ async function fetchAllGroups(client) {
                 "participants": participants_mobile_str,
             });
             // console.log(res[res.length - 1]);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    return res;
+}
+
+async function getMobileNumber(client) {
+    let me = await client.info;
+    return me.wid.user;
+}
+
+async function getMobileFromDatabase(id) {
+    let table = "home_bot";
