@@ -201,3 +201,17 @@ async function updateMobileInDatabase(id, mobile) {
         });
     });
 }
+
+
+async function getLatestLogFromDatabase(chatid) {
+    let table = "home_grouplog";
+    let sql = `SELECT * FROM ${table} WHERE chatid = '${chatid}' ORDER BY timestamp DESC LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+        db.get(sql, (err, row) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(row ? row : null);
+            }
+        });
