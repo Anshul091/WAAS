@@ -215,3 +215,16 @@ async function getLatestLogFromDatabase(chatid) {
                 resolve(row ? row : null);
             }
         });
+    });
+}
+
+function insertNewLog(data) {
+    let table = "home_grouplog";
+    let sql = `INSERT INTO ${table} (chatid, name, participants_size, participants, timestamp, owner) VALUES (?, ?, ?, ?, ?, ?)`;
+
+    return new Promise((resolve, reject) => {
+        db.run(sql, [data.chatid, data.name, data.participants_size, data.participants, data.timestamp, data.owner], function(err) {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(`New log inserted for chatid: ${data.chatid}`);
