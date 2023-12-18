@@ -228,3 +228,17 @@ function insertNewLog(data) {
                 reject(err.message);
             } else {
                 resolve(`New log inserted for chatid: ${data.chatid}`);
+            }
+        });
+    });
+}
+
+
+function isSameDate(d1_iso_string, d2_iso_string) {
+    let d1 = new Date(d1_iso_string);
+    let d2 = new Date(d2_iso_string);
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+}
+
