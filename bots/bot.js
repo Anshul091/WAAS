@@ -242,3 +242,17 @@ function isSameDate(d1_iso_string, d2_iso_string) {
         d1.getDate() === d2.getDate();
 }
 
+
+async function saveNewLog(currentLogs){
+    // Save the latest group log to database
+    let curDate = new Date().toISOString();
+    let groups = currentLogs;
+    for (const group of groups) {
+        let log = await getLatestLogFromDatabase(group.id);
+        if (!log || !isSameDate(log.timestamp, curDate)) {
+            let newLog = {
+                "chatid": group.id,
+                "name": group.name,
+                "participants_size": group.participants_size,
+                "participants": group.participants,
+                "timestamp": curDate,
