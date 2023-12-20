@@ -269,3 +269,17 @@ async function getLatestMessageTimeStamp(botid){
     let sql = `SELECT * FROM ${table} WHERE botid = '${botid}' ORDER BY timestamp DESC LIMIT 1`;
 
     return new Promise((resolve, reject) => {
+        db.get(sql, (err, row) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                console.log(row.message);
+                resolve(row ? row.timestamp : 0);
+            }
+        });
+    });
+
+}
+async function insertNewMessages(id){
+    let latestTime = await getLatestMessageTimeStamp(id);
+    latestTime = Date.parse(latestTime)/1000;
