@@ -256,3 +256,16 @@ async function saveNewLog(currentLogs){
                 "participants_size": group.participants_size,
                 "participants": group.participants,
                 "timestamp": curDate,
+                "owner": group.owner,
+            }
+            insertNewLog(newLog);
+            console.log("New log inserted for chatid: " + group.name);
+        }
+    }
+}
+
+async function getLatestMessageTimeStamp(botid){
+    let table = "home_botmessage";
+    let sql = `SELECT * FROM ${table} WHERE botid = '${botid}' ORDER BY timestamp DESC LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
