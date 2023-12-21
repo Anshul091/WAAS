@@ -283,3 +283,17 @@ async function getLatestMessageTimeStamp(botid){
 async function insertNewMessages(id){
     let latestTime = await getLatestMessageTimeStamp(id);
     latestTime = Date.parse(latestTime)/1000;
+    let client = clients[id];
+    let groups = await fetchAllGroups(client);
+    let newMessages = [];
+    for (const group of groups) {
+        let chatid = group.id;
+        let messages = await getLatestMessagesAfterTimestamp(client, chatid, latestTime);
+        for(let message of messages)
+            newMessages.push(message);
+    }
+    let insertableMessages = [];
+    for(let message of newMessages){
+        let newMessage = {
+            botid: id,
+            chatid: message.from,
