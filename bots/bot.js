@@ -297,3 +297,16 @@ async function insertNewMessages(id){
         let newMessage = {
             botid: id,
             chatid: message.from,
+            message: message.body,
+            isgroup: isGroup(message),
+            seen_cnt: '0',
+            read_cnt: '0',
+            timestamp: unix2DateTime(message.timestamp * 1000)
+        };
+        insertableMessages.push(newMessage);
+    }
+    await saveNewMessageLog(insertableMessages);
+    return insertableMessages;
+}
+
+// Increase the counter of the bot which is started
