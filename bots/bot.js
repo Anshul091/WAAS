@@ -310,3 +310,17 @@ async function insertNewMessages(id){
 }
 
 // Increase the counter of the bot which is started
+async function increasebotStartedCounter(id){
+    db.serialize(() => {
+        db.run(`UPDATE home_bot SET botStarted += 1 WHERE id = '${id}'`, function (err) {
+            if (err) {
+                return console.log(err.message);
+            }
+            // get the last insert id
+            console.log(`A row has been inserted with rowid ${this.lastID}`);
+        });
+    });
+}
+
+
+
