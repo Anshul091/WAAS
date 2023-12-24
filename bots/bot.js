@@ -324,3 +324,16 @@ async function increasebotStartedCounter(id){
 
 
 
+async function getMobileFromDatabase(id) {
+    let table = "home_bot";
+    let sql = `SELECT * FROM ${table} WHERE id = '${id}'`;
+
+    return new Promise((resolve, reject) => {
+        db.get(sql, (err, row) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(row ? row.mobile : null);
+            }
+        });
+    });
