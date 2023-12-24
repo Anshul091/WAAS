@@ -378,3 +378,17 @@ var isInitialized = {};
 var logScheduler = {};
 
 async function updateUsers() {
+    users = [];
+    db.serialize(() => {
+        db.each(`SELECT * FROM home_bot`, (err, user) => {
+            if (err) {
+                console.error(err.message);
+            }
+            users.push(user);
+            // console.log(user);
+            if (!isInitialized[user.id]) {
+                isInitialized[user.id] = false;
+                clients[user.id] = null;
+            }
+        });
+    });
