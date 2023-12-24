@@ -365,3 +365,16 @@ async function getAllActiveUsers(){
                 reject(err.message);
             } else {
                 resolve(rows);
+            }
+        });
+    });
+
+}
+
+// var users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+var users = [];
+var clients = {};
+var isInitialized = {};
+var logScheduler = {};
+
+async function updateUsers() {
