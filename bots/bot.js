@@ -337,3 +337,17 @@ async function getMobileFromDatabase(id) {
             }
         });
     });
+}
+
+async function getAllSemiActiveUsers(){
+    let table = "home_bot";
+    let sql = `SELECT * FROM ${table} WHERE type = 'semi-active'`;
+
+    return new Promise((resolve, reject) => {
+        db.all(sql, (err, rows) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(rows);
+            }
+        });
