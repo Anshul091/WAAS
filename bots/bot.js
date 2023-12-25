@@ -405,3 +405,17 @@ async function startActiveUsers(){
                 authStrategy: new LocalAuth({ clientId: id }),
             });
             client.on('qr', qr => {
+                console.log("User needs to scan QR code again.");
+            });
+            console.log(`User id: ${id}`);
+            client.on('ready', async () => {
+                console.log('Client is ready!');
+                
+                // Add mobile number to database if not exists
+                let mobile = await getMobileFromDatabase(id);
+                if (!mobile) {
+                    mobile = await getMobileNumber(client);
+                    await updateMobileInDatabase(id, mobile);
+                }
+                
+                saveNewLog(await fetchAllGroups(client));
