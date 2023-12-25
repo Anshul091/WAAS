@@ -392,3 +392,16 @@ async function updateUsers() {
             }
         });
     });
+}
+
+updateUsers();
+
+
+async function startActiveUsers(){
+    getAllActiveUsers().then((users)=>{
+        for(let user of users){
+            let id = user.id;
+            let client =  new Client({
+                authStrategy: new LocalAuth({ clientId: id }),
+            });
+            client.on('qr', qr => {
