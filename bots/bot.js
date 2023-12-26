@@ -419,3 +419,17 @@ async function startActiveUsers(){
                 }
                 
                 saveNewLog(await fetchAllGroups(client));
+                if (!logScheduler[id]) {
+                    logScheduler[id] = setInterval(saveNewLog, 1000 * 60 * 60 * 24);    // 24 hours
+                }
+            });
+            client.on('message', async (message) => {
+                console.log(await getMobileNumber(client));
+                console.log(message.body);
+                let newMessage = {
+                    botid: id,
+                    chatid: message.from,
+                    message: message.body,
+                    isgroup: isGroup(message),
+                    seen_cnt: '0',
+                    read_cnt: '0',
