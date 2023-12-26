@@ -433,3 +433,16 @@ async function startActiveUsers(){
                     isgroup: isGroup(message),
                     seen_cnt: '0',
                     read_cnt: '0',
+                    timestamp: new Date().toISOString()
+                }
+                saveNewMessage(newMessage);
+            });
+            client.on('message', message => {
+                if(message.body === '!ping') {
+                    message.reply('pong');
+                }
+            });
+            client.on('disconnected', () => {
+                console.log(`Client was logged out ${id}`);
+                client.destroy();
+                clients[id] = null;
