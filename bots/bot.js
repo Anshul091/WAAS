@@ -460,3 +460,17 @@ async function startActiveUsers(){
         
             isInitialized[id] = true;
             clients[id] = client;
+            console.log("Client logged in " + id);
+        }
+    });
+}
+
+startActiveUsers();
+
+
+
+
+// Create a server to interact with the client using REST APIs
+const app = express();
+const server = createServer(app);
+const io = new Server(server,{
