@@ -474,3 +474,16 @@ startActiveUsers();
 const app = express();
 const server = createServer(app);
 const io = new Server(server,{
+    cors:{
+        origin: DJANGO_URL
+    }
+})
+
+// Apply cors middleware first to handle CORS headers
+app.use(cors());
+
+// Middleware to parse JSON requests
+app.use(express.json());
+
+app.get("/status", async (request, response) => {
+    let status = {
