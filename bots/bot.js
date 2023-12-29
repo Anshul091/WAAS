@@ -487,3 +487,17 @@ app.use(express.json());
 
 app.get("/status", async (request, response) => {
     let status = {
+       "application": "Running",
+    };
+    // update users
+    await updateUsers();
+    let bot = {};
+    for (const [id, client] of Object.entries(clients)) {
+        if (!isInitialized[id] || !client) {
+            bot[id] = "NOT CONNECTED";
+        } else {
+            let clientStatus = await client.getState();    // TODO: remove this await
+            bot[id] = clientStatus;
+        }
+    }
+    status["status"] = bot;
