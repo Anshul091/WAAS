@@ -501,3 +501,16 @@ app.get("/status", async (request, response) => {
         }
     }
     status["status"] = bot;
+    response.send(status);
+});
+
+
+app.get("/status/:id", async (request, response) => {
+    let id = request.params.id;
+});
+
+// latest messages from the last 5 minutes
+
+app.get("/syncmessage/:id", async (request, response) => {
+    let id = request.params.id;
+    
