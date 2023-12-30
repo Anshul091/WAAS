@@ -514,3 +514,17 @@ app.get("/status/:id", async (request, response) => {
 app.get("/syncmessage/:id", async (request, response) => {
     let id = request.params.id;
     
+    let json_response = {
+        "status": "OK",
+        "messages": [],
+    };
+    if(id in logScheduler){
+        if(logScheduler[id] != null){
+            json_response["messages"] = await insertNewMessages(id);
+            json_response["status"] = json_response["messages"][0].timestamp;
+        }
+    }
+    response.send(json_response);
+});
+
+
