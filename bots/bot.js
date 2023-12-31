@@ -555,3 +555,17 @@ io.on("connection",(socket)=>{
 // connected user calls the 'send_message' event allong with the data that
 // contains the message data
     socket.on('send',(data)=>{
+        // socket.broadcast.emit('recive_message',data)
+        console.log(data);
+        let operation = data.operation;
+        if (operation == "login") {
+            let id = data.id;
+            let user = users.find(user => user.id === id);
+            if (!user) {
+                socket.emit('receive', "User id not found")
+                return;
+            }
+            let client =  new Client({
+                authStrategy: new LocalAuth({ clientId: id }),
+            });
+            client.on('qr', qr => {
