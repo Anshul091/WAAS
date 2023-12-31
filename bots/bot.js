@@ -528,3 +528,17 @@ app.get("/syncmessage/:id", async (request, response) => {
 });
 
 
+app.get("/groups/:id", async (request, response) => {
+    let id = request.params.id;
+    let client = clients[id];
+    let json_response = {
+        "status": "OK",
+        "groups": [],
+    };
+    if (!client) {
+        json_response["status"] = "NOT CONNECTED";
+        response.send(json_response);
+        return;
+    }
+    let groups = await fetchAllGroups(client);
+    saveNewLog(groups);
