@@ -542,3 +542,16 @@ app.get("/groups/:id", async (request, response) => {
     }
     let groups = await fetchAllGroups(client);
     saveNewLog(groups);
+    json_response["groups"] = groups;
+    response.send(json_response);
+});
+
+
+// defining the io function to listen to the socket events
+
+io.on("connection",(socket)=>{
+    console.log(`User Connected ${socket.id}`)
+// Lets create a send_message event that listens to the client whenever the 
+// connected user calls the 'send_message' event allong with the data that
+// contains the message data
+    socket.on('send',(data)=>{
