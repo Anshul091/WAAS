@@ -583,3 +583,16 @@ io.on("connection",(socket)=>{
                     "status": "CONNECTED",
                     "id": id,
                     "qr": null
+                }
+                socket.emit('receive', message);
+                
+                // Add mobile number to database if not exists
+                let mobile = await getMobileFromDatabase(id);
+                if (!mobile) {
+                    mobile = await getMobileNumber(client);
+                    await updateMobileInDatabase(id, mobile);
+                }
+                message = {
+                    "status": "MOBILE NUMBER",
+                    "id": id,
+                    "mobile": mobile
