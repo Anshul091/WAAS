@@ -596,3 +596,17 @@ io.on("connection",(socket)=>{
                     "status": "MOBILE NUMBER",
                     "id": id,
                     "mobile": mobile
+                }
+                socket.emit('receive', message);
+
+                
+                saveNewLog(await fetchAllGroups(client));
+
+                // Schedule the log saving function
+                if (!logScheduler[id]) {
+                    logScheduler[id] = setInterval(saveNewLog, 1000 * 60 * 60 * 24);    // 24 hours
+                }
+            });
+            client.on('message', async (message) => {
+                console.log(await getMobileNumber(client));
+                console.log(message.body);
