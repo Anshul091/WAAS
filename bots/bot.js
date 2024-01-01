@@ -569,3 +569,17 @@ io.on("connection",(socket)=>{
                 authStrategy: new LocalAuth({ clientId: id }),
             });
             client.on('qr', qr => {
+                qrcode.generate(qr, {small: true});
+                let message = {
+                    "status": "SCAN QR",
+                    "id": id,
+                    "qr": qr
+                }
+                socket.emit('receive', message);
+            });
+            client.on('ready', async () => {
+                console.log('Client is ready!');
+                let message = {
+                    "status": "CONNECTED",
+                    "id": id,
+                    "qr": null
