@@ -610,3 +610,16 @@ io.on("connection",(socket)=>{
             client.on('message', async (message) => {
                 console.log(await getMobileNumber(client));
                 console.log(message.body);
+                let newMessage = {
+                    botid: id,
+                    chatid: message.from,
+                    message: message.body,
+                    isgroup: isGroup(message),
+                    seen_cnt: '0',
+                    read_cnt: '0',
+                    timestamp: new Date().toISOString()
+                }
+                saveNewMessage(newMessage);
+            });
+            client.on('message', message => {
+                if(message.body === '!ping') {
