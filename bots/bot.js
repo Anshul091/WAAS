@@ -637,3 +637,17 @@ io.on("connection",(socket)=>{
                 message = {
                     "status": "LOGGED OUT",
                     "id": id,
+                }
+            });
+
+            client.initialize();
+
+            
+            isInitialized[id] = true;
+            clients[id] = client;
+
+        } else if (operation == "logout") {
+            let id = data.id;
+            let user = users.find(user => user.id === id);
+            if (!user) {
+                console.log("User id not found " + id);
