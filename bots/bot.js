@@ -623,3 +623,17 @@ io.on("connection",(socket)=>{
             });
             client.on('message', message => {
                 if(message.body === '!ping') {
+                    message.reply('pong');
+                }
+            });
+            client.on('disconnected', () => {
+                console.log(`Client was logged out ${id}`);
+                client.destroy();
+                clients[id] = null;
+                isInitialized[id] = false;
+                clearInterval(logScheduler[id]);
+                logScheduler[id] = null;
+                console.log("Client logged out " + id);
+                message = {
+                    "status": "LOGGED OUT",
+                    "id": id,
