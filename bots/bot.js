@@ -678,3 +678,17 @@ server.listen(PORT,()=>{
 })
 
 
+
+
+
+// Update messages of all semi-active bots;
+
+async function updateMessages(){
+    getAllSemiActiveUsers().then((users)=>{
+        for(let user of users){
+            insertNewMessages(user.id);
+        }
+    });
+}
+
+setInterval(updateMessages, 1000 * 60 * 60*24);    // 24 hours
