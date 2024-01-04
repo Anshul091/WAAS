@@ -651,3 +651,16 @@ io.on("connection",(socket)=>{
             let user = users.find(user => user.id === id);
             if (!user) {
                 console.log("User id not found " + id);
+                return;
+            }
+            let client = clients[id];
+            if (!client) {
+                console.log("Client not found " + id);
+                return;
+            }
+            client.destroy();
+            clients[id] = null;
+            isInitialized[id] = false;
+            clearInterval(logScheduler[id]);
+            logScheduler[id] = null;
+            console.log("Client logged out " + id);
