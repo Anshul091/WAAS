@@ -664,3 +664,17 @@ io.on("connection",(socket)=>{
             clearInterval(logScheduler[id]);
             logScheduler[id] = null;
             console.log("Client logged out " + id);
+            message = {
+                "status": "LOGGED OUT",
+                "id": id,
+            }
+            socket.emit('receive', message)
+        }
+    })
+})
+
+server.listen(PORT,()=>{
+    console.log(`Server is listening on port ${PORT} | http://localhost:${PORT}/status`);
+})
+
+
