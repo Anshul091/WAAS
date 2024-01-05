@@ -18,3 +18,10 @@ class Bot(models.Model):
 
     def __str__(self):
         return f'{self.id} | {self.name} | {self.username} | {self.type}'
+
+
+class BotMessage(models.Model):
+    botid = models.CharField(max_length=32, blank=False, null=False)
+    chatid = models.CharField(max_length=32)
+    message = models.TextField()
+    isgroup = models.BooleanField()
