@@ -32,3 +32,9 @@ class BotMessage(models.Model):
     def __str__(self):
         msg = self.message
         if len(msg) > 20:
+            msg = msg[:20] + '...'
+        return f'{self.botid} | {self.timestamp} | {msg}'
+
+
+class GroupLog(models.Model):
+    chatid = models.CharField(max_length=32)
