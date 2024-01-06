@@ -25,3 +25,10 @@ class BotMessage(models.Model):
     chatid = models.CharField(max_length=32)
     message = models.TextField()
     isgroup = models.BooleanField()
+    seen_cnt = models.IntegerField(default=0)
+    read_cnt = models.IntegerField(default=0)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        msg = self.message
+        if len(msg) > 20:
