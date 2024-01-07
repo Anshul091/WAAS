@@ -45,3 +45,10 @@ class GroupLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        return f'{self.name} | {self.participants_size}'
+
+
+
+class GroupTag(models.Model):
+    tag = models.CharField(max_length=100)
+    chatid = models.CharField(max_length=32, blank=False, null=False)
