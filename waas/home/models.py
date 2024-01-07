@@ -38,3 +38,10 @@ class BotMessage(models.Model):
 
 class GroupLog(models.Model):
     chatid = models.CharField(max_length=32)
+    name = models.CharField(max_length=100)
+    owner = models.CharField(max_length=100, blank=True, null=True)
+    participants_size = models.IntegerField()
+    participants = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
