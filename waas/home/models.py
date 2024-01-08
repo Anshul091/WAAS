@@ -52,3 +52,10 @@ class GroupLog(models.Model):
 class GroupTag(models.Model):
     tag = models.CharField(max_length=100)
     chatid = models.CharField(max_length=32, blank=False, null=False)
+    botid = models.CharField(max_length=32, blank=False, null=False)
+
+    def __str__(self):
+        return f'{self.tag} | {self.chatid} | {self.botid}'
+
+
+
