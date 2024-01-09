@@ -59,3 +59,10 @@ class GroupTag(models.Model):
 
 
 
+class BotMessageTrigger(models.Model):
+    botid = models.CharField(max_length=32, blank=False, null=False)
+    trigger = models.CharField(max_length=100, blank=False, null=False)
+    response = models.TextField()
+
+    def __str__(self):
+        return f'{self.botid} | {self.trigger}'
