@@ -11,3 +11,9 @@ import os
 import shutil
 import requests
 from django.conf import settings
+HOST_URL = settings.HOST_URL
+
+def index(request):
+    return render(request, 'home/index.html', {'HOST_URL': HOST_URL})
+
+
