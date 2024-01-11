@@ -17,3 +17,10 @@ def index(request):
     return render(request, 'home/index.html', {'HOST_URL': HOST_URL})
 
 
+
+def logout(request):
+    if request.user.is_authenticated:
+        auth_logout(request)
+        
+    return redirect('home')
+
