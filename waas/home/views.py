@@ -24,3 +24,9 @@ def logout(request):
         
     return redirect('home')
 
+
+
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password1 = request.POST['password1']
