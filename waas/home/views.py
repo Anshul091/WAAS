@@ -30,3 +30,10 @@ def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
         password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        email = request.POST['email']
+
+
+        if password1 == password2:
+            if User.objects.filter(username=username).exists(): 
+                messages.error(request, 'Username already exists')
