@@ -37,3 +37,10 @@ def signup(request):
         if password1 == password2:
             if User.objects.filter(username=username).exists(): 
                 messages.error(request, 'Username already exists')
+                return redirect('signup')
+            else:
+                user = User.objects.create_user(username=username, password=password1, email=email)
+                user.save()
+                messages.success(request, 'Account created successfully')
+                return redirect('login')
+        else:
