@@ -44,3 +44,9 @@ def signup(request):
                 messages.success(request, 'Account created successfully')
                 return redirect('login')
         else:
+            messages.error(request, 'Passwords do not match')
+            return redirect('signup')
+    else:
+        return render(request, 'home/signup.html',  {'HOST_URL': HOST_URL})
+    
+        
