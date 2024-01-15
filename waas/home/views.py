@@ -57,3 +57,9 @@ def login(request):
 
         user = authenticate(request, username=username, password=password)
 
+        if user is not None:
+            auth_login(request, user)
+            messages.success(request, 'Logged in successfully')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Invalid username or password')
