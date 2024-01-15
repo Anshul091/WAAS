@@ -63,3 +63,10 @@ def login(request):
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password')
+            return redirect('login')
+    else:
+        return render(request, 'home/login.html', {'HOST_URL': HOST_URL})
+
+
+@login_required
+def dashboard(request):
