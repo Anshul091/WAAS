@@ -70,3 +70,9 @@ def login(request):
 
 @login_required
 def dashboard(request):
+    bots = Bot.objects.filter(username=request.user.username)
+    return render(request, 'home/dashboard.html', {'bots': bots, 'HOST_URL': HOST_URL})
+
+
+
+@login_required
