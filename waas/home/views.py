@@ -83,3 +83,10 @@ def addbot(request):
                 return False, 'Bot name cannot be empty'
             if len(name) < 3:
                 return False, 'Bot name must be atleast 3 characters long'
+            if len(name) > 12:
+                return False, 'Bot name must be atmost 12 characters long'
+            if ' ' in name:
+                return False, 'Bot name cannot contain spaces'
+            if not name.isalnum():
+                return False, 'Bot name can only contain alphabets and numbers'
+            return True, 'Bot name is valid'
