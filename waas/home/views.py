@@ -76,3 +76,10 @@ def dashboard(request):
 
 
 @login_required
+def addbot(request):
+    if request.method == 'POST':
+        def isBotNameValid(name):
+            if not name:
+                return False, 'Bot name cannot be empty'
+            if len(name) < 3:
+                return False, 'Bot name must be atleast 3 characters long'
