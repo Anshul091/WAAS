@@ -90,3 +90,9 @@ def addbot(request):
             if not name.isalnum():
                 return False, 'Bot name can only contain alphabets and numbers'
             return True, 'Bot name is valid'
+        
+        botname = request.POST['botname']
+        valid, msg = isBotNameValid(botname)
+        if not valid:
+            messages.error(request, msg)
+            return redirect('dashboard')
