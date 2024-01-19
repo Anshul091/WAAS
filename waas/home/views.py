@@ -96,3 +96,10 @@ def addbot(request):
         if not valid:
             messages.error(request, msg)
             return redirect('dashboard')
+        if Bot.objects.filter(name=botname, username=request.user.username).exists():
+            messages.error(request, 'This Bot name already exists')
+            return redirect('dashboard')
+        bot = Bot.objects.create(username=request.user.username, name=botname)
+        bot.save()
+        messages.success(request, 'Bot added successfully')
+        return redirect('dashboard')
