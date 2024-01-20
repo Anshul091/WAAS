@@ -103,3 +103,9 @@ def addbot(request):
         bot.save()
         messages.success(request, 'Bot added successfully')
         return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+@login_required
+def update_bot_name(request):
+    if request.method == 'POST':
