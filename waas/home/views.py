@@ -109,3 +109,10 @@ def addbot(request):
 @login_required
 def update_bot_name(request):
     if request.method == 'POST':
+        bot_name = request.POST['bot_name']
+        bot_id = request.POST['bot_id']
+        if Bot.objects.filter(name=bot_name, username=request.user.username).exists():
+            bot = Bot.objects.filter(id = bot_id)
+            prev_name = bot.values_list('name', flat=True)[0]
+            messages.error(request, 'This Bot name already exists')
+            return redirect(f'/bot/{prev_name}')
