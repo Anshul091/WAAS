@@ -116,3 +116,9 @@ def update_bot_name(request):
             prev_name = bot.values_list('name', flat=True)[0]
             messages.error(request, 'This Bot name already exists')
             return redirect(f'/bot/{prev_name}')
+        bot = Bot.objects.get(id=bot_id)
+        bot.name = bot_name
+        bot.save()
+        return redirect(f'/bot/{bot_name}')
+    else:
+        return redirect('dashboard')
