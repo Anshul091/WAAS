@@ -122,3 +122,10 @@ def update_bot_name(request):
         return redirect(f'/bot/{bot_name}')
     else:
         return redirect('dashboard')
+
+@login_required
+def delete_bot(request):
+    if request.method == 'POST':
+        bot_id = request.POST['bot-id']
+        bot = Bot.objects.get(id=bot_id)
+        bot.delete()
