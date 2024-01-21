@@ -129,3 +129,10 @@ def delete_bot(request):
         bot_id = request.POST['bot-id']
         bot = Bot.objects.get(id=bot_id)
         bot.delete()
+        botmessage = BotMessage.objects.filter(botid=bot_id)
+        botmessage.delete()
+        bottags = GroupTag.objects.filter(botid=bot_id)
+        bottags.delete()
+        
+        
+        # Delete the sessions of the bot
