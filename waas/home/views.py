@@ -149,3 +149,9 @@ def delete_bot(request):
 
 @login_required
 def bot(request, name):
+    username = request.user.username
+    try:
+        bot = Bot.objects.get(name=name, username=username)
+        print(bot)
+        return render(request, 'home/bot.html', {'bot': bot, 'HOST_URL': HOST_URL})
+    except:
