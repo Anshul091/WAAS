@@ -142,3 +142,10 @@ def delete_bot(request):
             shutil.rmtree(session_dir)  # Delete the session directory tree
             os.rmdir(session_dir)  # Delete the session directory
         except:
+            pass
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+@login_required
+def bot(request, name):
