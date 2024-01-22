@@ -136,3 +136,9 @@ def delete_bot(request):
         
         
         # Delete the sessions of the bot
+        parent_dir = Path(settings.BASE_DIR).parent.absolute()
+        session_dir = os.path.join(parent_dir, '.wwebjs_auth', f'session-{bot_id}')
+        try:
+            shutil.rmtree(session_dir)  # Delete the session directory tree
+            os.rmdir(session_dir)  # Delete the session directory
+        except:
