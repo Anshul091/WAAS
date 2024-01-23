@@ -155,3 +155,10 @@ def bot(request, name):
         print(bot)
         return render(request, 'home/bot.html', {'bot': bot, 'HOST_URL': HOST_URL})
     except:
+        messages.error(request, 'Bot not found')
+        return redirect('dashboard')
+
+
+def test(request):
+    bots = Bot.objects.all()
+    for bot in bots:
