@@ -162,3 +162,9 @@ def bot(request, name):
 def test(request):
     bots = Bot.objects.all()
     for bot in bots:
+        print(bot.id, bot.username, bot.name)
+    return render(request, 'home/test.html', {'HOST_URL': HOST_URL})
+
+
+
+
