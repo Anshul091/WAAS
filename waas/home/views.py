@@ -168,3 +168,10 @@ def test(request):
 
 
 
+
+
+@login_required
+def group(request, groupid):
+    grouplogs = GroupLog.objects.filter(chatid=groupid).order_by('-timestamp')
+    botid = request.GET['botid']
+    try:
