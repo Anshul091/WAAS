@@ -175,3 +175,10 @@ def group(request, groupid):
     grouplogs = GroupLog.objects.filter(chatid=groupid).order_by('-timestamp')
     botid = request.GET['botid']
     try:
+        group = grouplogs[0]
+    except:
+        return HttpResponse('Group not found')
+    group_msg = BotMessage.objects.filter(chatid=groupid, botid=botid).order_by('-timestamp')
+    groupparticipant = {}
+    member_activity = {}
+    
