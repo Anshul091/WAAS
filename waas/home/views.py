@@ -182,3 +182,9 @@ def group(request, groupid):
     groupparticipant = {}
     member_activity = {}
     
+    for i in range(len(grouplogs)-1):
+        todayGroups = grouplogs[i]
+        yesterdayGroups = grouplogs[i+1]
+        date = todayGroups.timestamp.date()
+        member_activity[f'{date}'] = [0, 0, 0]
+        #Joined condition
