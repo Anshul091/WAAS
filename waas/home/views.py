@@ -195,3 +195,9 @@ def group(request, groupid):
                     if groupparticipant[f'{participant}'][0] == '.':
                         groupparticipant[f'{participant}'] = [todayGroups.timestamp.date(), groupparticipant[f'{participant}'][1]]
                 else:
+                    groupparticipant[f'{participant}'] = [todayGroups.timestamp.date(), '.']    
+        for participant in yesterdayGroups.participants.split(','):
+            if participant not in todayGroups.participants.split(','):
+                member_activity[f'{date}'][1] += 1
+                if participant in groupparticipant:
+                    groupparticipant[f'{participant}'] = [groupparticipant[f'{participant}'][0], todayGroups.timestamp.date()]
