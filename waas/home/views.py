@@ -201,3 +201,10 @@ def group(request, groupid):
                 member_activity[f'{date}'][1] += 1
                 if participant in groupparticipant:
                     groupparticipant[f'{participant}'] = [groupparticipant[f'{participant}'][0], todayGroups.timestamp.date()]
+                else:
+                    groupparticipant[f'{participant}'] = ['.', todayGroups.timestamp.date()]
+        member_activity[f'{date}'][2] = member_activity[f'{date}'][0] - member_activity[f'{date}'][1]
+    
+    print(member_activity)
+    
+
