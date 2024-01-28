@@ -208,3 +208,9 @@ def group(request, groupid):
     print(member_activity)
     
 
+    
+    response = {
+        'group': group,         # grouplog of latest timestamp (GroupLog)
+        'group_msg': group_msg, # All messages of the group (BotMessage)
+        'grouplogs': grouplogs, # List of groups (GroupLog)
+        'groupparticipant': groupparticipant, # Dictionary of group participant activity (dict)
