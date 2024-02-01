@@ -214,3 +214,10 @@ def group(request, groupid):
         'group_msg': group_msg, # All messages of the group (BotMessage)
         'grouplogs': grouplogs, # List of groups (GroupLog)
         'groupparticipant': groupparticipant, # Dictionary of group participant activity (dict)
+        'memberactivity': member_activity, # Dictionary of member joined and left daily activity (dict)
+        'HOST_URL': HOST_URL,
+    }
+    return render(request, 'home/group.html', response)
+
+
+
