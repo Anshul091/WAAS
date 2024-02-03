@@ -221,3 +221,10 @@ def group(request, groupid):
 
 
 
+
+def addtag(request):
+    if request.method == 'POST':
+        tag = request.POST['tag']
+        chatid = request.POST['chatid']
+        botid = request.POST['botid']
+        
