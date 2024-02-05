@@ -228,3 +228,9 @@ def addtag(request):
         chatid = request.POST['chatid']
         botid = request.POST['botid']
         
+        # if not Bot.objects.filter(id=botid).exists():
+        #     messages.error(request, 'Bot not found')
+        #     return redirect(f'/bot/{botname}')
+        
+        # if not GroupLog.objects.filter(chatid=chatid).exists():
+        #     messages.error(request, 'Group not found')
