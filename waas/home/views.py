@@ -241,3 +241,9 @@ def addtag(request):
         if tag == '':
             messages.error(request, 'Tag cannot be empty')
         elif GroupTag.objects.filter(tag=tag, chatid=chatid, botid=botid).exists():
+            messages.error(request, 'Tag already exists')
+        else:
+            tag = GroupTag.objects.create(tag=tag, chatid=chatid, botid=botid)
+            tag.save()
+        return redirect(f'/bot/{botname}')
+    
