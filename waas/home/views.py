@@ -234,3 +234,10 @@ def addtag(request):
         
         # if not GroupLog.objects.filter(chatid=chatid).exists():
         #     messages.error(request, 'Group not found')
+        #     return redirect(f'/bot/{botname}')
+        
+        bot = Bot.objects.get(id=botid)
+        botname = bot.name
+        if tag == '':
+            messages.error(request, 'Tag cannot be empty')
+        elif GroupTag.objects.filter(tag=tag, chatid=chatid, botid=botid).exists():
