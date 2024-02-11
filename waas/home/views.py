@@ -247,3 +247,10 @@ def addtag(request):
             tag.save()
         return redirect(f'/bot/{botname}')
     
+    
+def update_bot_type(request):
+    if request.method == 'POST':
+        bot_id = request.POST['bot_id']
+        bot_type = request.POST['type']
+        bot = Bot.objects.get(id=bot_id)
+        # if(bot.type == 'semi-active' and bot_type == 'active'):
