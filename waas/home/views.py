@@ -254,3 +254,10 @@ def update_bot_type(request):
         bot_type = request.POST['type']
         bot = Bot.objects.get(id=bot_id)
         # if(bot.type == 'semi-active' and bot_type == 'active'):
+            # res = requests.get(f'{HOST_URL}/syncmessage/{bot_id}')
+            # print(res.json())
+        bot.type = bot_type
+        bot.save()
+        return redirect(f'/bot/{bot.name}')
+    else:
+        return redirect('dashboard')
